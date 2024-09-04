@@ -49,14 +49,12 @@ const Table = () => {
 
   return (
     <div style={{ marginBottom: "10px" }}>
-      <button onClick={addColumn} style={{ marginBottom: "10px" }}>
-        +
-      </button>
       <div
         ref={tableRef}
         style={{
           width: `${width}px`,
           border: "1px solid black",
+          borderRadius: "8px", // Round the corners
           borderCollapse: "collapse",
           position: "relative",
           overflowX: width < minWidth ? "auto" : "visible", // Show scrollbar if width is less than minWidth
@@ -67,9 +65,17 @@ const Table = () => {
             backgroundColor: "#f0f0f0",
             padding: "10px",
             borderBottom: "1px solid black",
+            borderTopLeftRadius: "8px", // Round the top left corner
+            borderTopRightRadius: "8px", // Round the top right corner
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Table Header
+          <span>Table Header</span>
+          <button onClick={addColumn} style={{ marginLeft: "10px" }}>
+            +
+          </button>
         </div>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
