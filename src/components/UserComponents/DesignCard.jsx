@@ -1,5 +1,4 @@
 // DesignCard.js
-import React from 'react';
 
 const DesignCard = ({ design, onDelete, onView }) => {
   const handleView = () => {

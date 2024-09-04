@@ -1,21 +1,21 @@
 // Dashboard.js
-import React, { useState } from 'react';
-import DesignCard from '../../components/UserComponents/DesignCard';
+import { useState } from "react";
+import DesignCard from "../../components/UserComponents/DesignCard";
 
 const Dashboard = () => {
   const [designs, setDesigns] = useState([
-    { id: 1, name: 'Design 1', type: 'sqlserver' },
-    { id: 2, name: 'Design 2', type: 'mysql' }
+    { id: 1, name: "Design 1", type: "sqlserver" },
+    { id: 2, name: "Design 2", type: "mysql" },
   ]);
 
   const [editDesignId, setEditDesignId] = useState(null);
-  const [newDesignName, setNewDesignName] = useState('');
+  const [newDesignName, setNewDesignName] = useState("");
 
   const handleCreateDesign = (type) => {
     const newDesign = {
       id: designs.length + 1,
       name: `New ${type} Design`,
-      type
+      type,
     };
     setDesigns([...designs, newDesign]);
   };
@@ -30,7 +30,7 @@ const Dashboard = () => {
     );
     setDesigns(updatedDesigns);
     setEditDesignId(null);
-    setNewDesignName('');
+    setNewDesignName("");
   };
 
   const handleViewDesign = (designId) => {
@@ -41,8 +41,12 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <h2>Your Designs</h2>
-      <button onClick={() => handleCreateDesign('sqlserver')}>Create SQL Server Design</button>
-      <button onClick={() => handleCreateDesign('mysql')}>Create MySQL Design</button>
+      <button onClick={() => handleCreateDesign("sqlserver")}>
+        Create SQL Server Design
+      </button>
+      <button onClick={() => handleCreateDesign("mysql")}>
+        Create MySQL Design
+      </button>
       <div className="design-list">
         {designs.map((design) => (
           <div key={design.id} className="design-card-container">
@@ -54,15 +58,20 @@ const Dashboard = () => {
                   onChange={(e) => setNewDesignName(e.target.value)}
                   placeholder="New Design Name"
                 />
-                <button onClick={() => handleRenameDesign(design.id)}>Save</button>
+                <button onClick={() => handleRenameDesign(design.id)}>
+                  Save
+                </button>
                 <button onClick={() => setEditDesignId(null)}>Cancel</button>
               </div>
             ) : (
-              <DesignCard 
-                design={design} 
-                onDelete={handleDeleteDesign} 
-                onView={handleViewDesign} 
-                onRename={() => { setEditDesignId(design.id); setNewDesignName(design.name); }} 
+              <DesignCard
+                design={design}
+                onDelete={handleDeleteDesign}
+                onView={handleViewDesign}
+                onRename={() => {
+                  setEditDesignId(design.id);
+                  setNewDesignName(design.name);
+                }}
               />
             )}
           </div>
