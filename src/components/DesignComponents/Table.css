@@ -1,0 +1,35 @@
+.table-container {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 20px;
+  }
+  
+  .table-header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .table-header input {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .table-columns,
+  .table-index {
+    padding: 10px;
+  }
+  
+  .table-row {
+    display: flex;
+  }
+  
+  .table-cell {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
