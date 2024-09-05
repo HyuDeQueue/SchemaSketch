@@ -1,14 +1,16 @@
 import { useState, useRef } from "react";
 
-const Table = () => {
+const Table = ({ borderColor = "pink", selectedBorderColor = "blue" }) => {
   const [width, setWidth] = useState(400); // Initial width in pixels
-  const [columns, setColumns] = useState([{ id: 1, name: "Example Name" }]);
+  const [isSelected, setIsSelected] = useState(false); // Track if the table is selected
+  const [columns] = useState([{ id: 1, name: "Example Name", type: "String" }]);
   const tableRef = useRef(null);
   const startX = useRef(0);
   const startWidth = useRef(0);
   const minWidth = 300; // Minimum width before showing ellipsis
 
   const handleMouseDown = (e) => {
+    if (!isSelected) return; // Only allow resizing if the table is selected
     startX.current = e.clientX;
     startWidth.current = tableRef.current.offsetWidth;
 
@@ -18,7 +20,9 @@ const Table = () => {
 
   const handleMouseMove = (e) => {
     const newWidth = startWidth.current + (e.clientX - startX.current);
-    setWidth(newWidth);
+    if (newWidth >= minWidth) {
+      setWidth(newWidth);
+    }
   };
 
   const handleMouseUp = () => {
@@ -26,38 +30,44 @@ const Table = () => {
     document.removeEventListener("mouseup", handleMouseUp);
   };
 
-  const addColumn = () => {
-    setColumns((prevColumns) => [
-      ...prevColumns,
-      {
-        id: prevColumns.length + 1,
-        name: `New Column ${prevColumns.length + 1}`,
-      },
-    ]);
+  const handleTableClick = () => {
+    setIsSelected(true); // Mark table as selected when clicked
   };
 
   const renderRows = () => {
     return columns.map((col, index) => (
-      <tr key={index}>
-        <td style={{ border: "1px solid black", padding: "8px" }}>{col.id}</td>
-        <td style={{ border: "1px solid black", padding: "8px" }}>
-          {col.name}
-        </td>
+      <tr key={index} style={rowStyle}>
+        <td style={{ ...cellStyle, textAlign: "left" }}>{col.name}</td>
+        <td style={{ ...cellStyle, textAlign: "right" }}>{col.type}</td>
       </tr>
     ));
   };
 
+  const rowStyle = {
+    display: "flex", // Use flexbox for row layout
+    justifyContent: "space-between",
+  };
+
+  const cellStyle = {
+    borderRight: "none", // Remove the border between columns
+    padding: "8px",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    flex: 1, // Ensure even distribution of space
+  };
+
   return (
-    <div style={{ marginBottom: "10px" }}>
+    <div style={{ marginBottom: "10px" }} onClick={handleTableClick}>
       <div
         ref={tableRef}
         style={{
           width: `${width}px`,
-          border: "1px solid black",
-          borderRadius: "8px", // Round the corners
-          borderCollapse: "collapse",
+          border: `2px solid ${isSelected ? selectedBorderColor : borderColor}`, // Highlight if selected
+          borderRadius: "8px",
           position: "relative",
-          overflowX: width < minWidth ? "auto" : "visible", // Show scrollbar if width is less than minWidth
+          overflowX: width < minWidth ? "auto" : "visible", // Scroll if too narrow
+          cursor: isSelected ? "default" : "pointer", // Change cursor on click
         }}
       >
         <div
@@ -65,41 +75,35 @@ const Table = () => {
             backgroundColor: "#f0f0f0",
             padding: "10px",
             borderBottom: "1px solid black",
-            borderTopLeftRadius: "8px", // Round the top left corner
-            borderTopRightRadius: "8px", // Round the top right corner
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            textAlign: "center", // Center the header
           }}
         >
-          <span>Table Header</span>
-          <button onClick={addColumn} style={{ marginLeft: "10px" }}>
-            +
-          </button>
+          Table Header
         </div>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr>
-              <th style={{ border: "1px solid black", padding: "8px" }}>ID</th>
-              <th style={{ border: "1px solid black", padding: "8px" }}>
-                Name
-              </th>
+            <tr style={rowStyle}>
+              <th style={{ ...cellStyle, textAlign: "left" }}>Name</th>
+              <th style={{ ...cellStyle, textAlign: "right" }}>Datatype</th>
             </tr>
           </thead>
           <tbody>{renderRows()}</tbody>
         </table>
-        <div
-          onMouseDown={handleMouseDown}
-          style={{
-            width: "10px",
-            height: "100%",
-            backgroundColor: "#ccc",
-            position: "absolute",
-            right: 0,
-            top: 0,
-            cursor: "ew-resize",
-          }}
-        />
+        {isSelected && (
+          <div
+            onMouseDown={handleMouseDown}
+            style={{
+              width: "5px", // Invisible resize bar
+              height: "100%",
+              position: "absolute",
+              right: 0,
+              top: 0,
+              cursor: "ew-resize",
+            }}
+          />
+        )}
       </div>
     </div>
   );
