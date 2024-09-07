@@ -82,8 +82,8 @@
 }
 
 .rename-input {
-  flex: 1; /* Ensure input takes up available space */
-  margin-right: 8px; /* Add space between input and icon */
+  flex: 1; 
+  margin-right: 8px; 
 }
 
 .table-details-row {
