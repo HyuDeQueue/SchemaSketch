@@ -1,49 +1,48 @@
+import {
+  QuestionCircleOutlined,
+  KeyOutlined,
+  MenuOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
-import { EditOutlined, SaveOutlined } from "@ant-design/icons";
 import "./Sidebar.css";
 
-const Sidebar = ({ onAddTable, onRenameTable }) => {
+const Sidebar = ({
+  onAddTable,
+  onRenameTable,
+  onTableSelect,
+  tables,
+  onAddColumn,
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [sidebarTables, setSidebarTables] = useState([]);
-  const [openTableId, setOpenTableId] = useState(null); // Track the open table details
-  const [editingTableId, setEditingTableId] = useState(null); // Track the table being renamed
-  const [newName, setNewName] = useState(""); // Store the new name for the table being edited
+  const [openTableId, setOpenTableId] = useState(null);
+  const [editingTableId, setEditingTableId] = useState(null);
+  const [newName, setNewName] = useState(""); // For renaming the table
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   const addTableToSidebar = () => {
-    const newTableName = `Table ${sidebarTables.length + 1}`;
-    setSidebarTables([
-      ...sidebarTables,
-      {
-        id: sidebarTables.length + 1,
-        name: newTableName,
-      },
-    ]);
-    onAddTable(newTableName); // Pass the new table's name to the parent component
+    const newTableName = `Table ${tables.length + 1}`;
+    onAddTable(newTableName);
   };
 
   const toggleTableDetails = (id) => {
-    setOpenTableId(openTableId === id ? null : id); // Toggle table details
+    setOpenTableId(openTableId === id ? null : id);
+    onTableSelect(id);
   };
 
-  // Start renaming a table
-  const handleRenameStart = (id, currentName) => {
-    setEditingTableId(id);
-    setNewName(currentName); // Set the current name in the input field
-  };
-
-  // Save the new name and update it in both Sidebar and DesignPage
   const handleRenameSave = (id) => {
-    setSidebarTables(
-      sidebarTables.map((table) =>
-        table.id === id ? { ...table, name: newName } : table
-      )
-    );
-    onRenameTable(id, newName); // Pass the new name to the parent component
-    setEditingTableId(null); // Exit the rename mode
+    onRenameTable(id, newName);
+    setEditingTableId(null);
+  };
+
+  const handleInputKeyDown = (e, id) => {
+    if (e.key === "Enter") {
+      handleRenameSave(id);
+    }
   };
 
   return (
@@ -72,20 +71,17 @@ const Sidebar = ({ onAddTable, onRenameTable }) => {
         </button>
       </div>
       <div className="content">
-        {sidebarTables.map((table) => (
+        {tables.map((table) => (
           <div key={table.id} className="table-row">
-            {/* Toggle between editing input and table name */}
             {editingTableId === table.id ? (
               <div className="edit-row">
                 <input
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
-                  className="rename-input"
-                />
-                <SaveOutlined
-                  className="icon-button"
-                  onClick={() => handleRenameSave(table.id)}
+                  onKeyDown={(e) => handleInputKeyDown(e, table.id)}
+                  className="detail-input"
+                  placeholder="Name: "
                 />
               </div>
             ) : (
@@ -96,16 +92,51 @@ const Sidebar = ({ onAddTable, onRenameTable }) => {
                 >
                   {table.name}
                 </button>
-                <EditOutlined
-                  className="icon-button"
-                  onClick={() => handleRenameStart(table.id, table.name)}
-                />
               </div>
             )}
             {openTableId === table.id && (
               <div className="table-details">
-                <p>Table Name: {table.name}</p>
-                <button className="action-button">Table Action</button>
+                <div className="table-details-row">
+                  <input
+                    type="text"
+                    style={{ width: "100%" }}
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    onKeyDown={(e) => handleInputKeyDown(e, table.id)}
+                    className="detail-input"
+                    placeholder="Name: "
+                  />
+                </div>
+
+                {table.columns.map((col, index) => (
+                  <div key={index} className="table-details-row">
+                    <input
+                      type="text"
+                      style={{ width: "30%" }}
+                      value={col.name}
+                      className="detail-input"
+                      readOnly
+                    />
+                    <select value={col.type} className="detail-select" readOnly>
+                      <option value="String">String</option>
+                    </select>
+                    <QuestionCircleOutlined className="icon-button" />
+                    <KeyOutlined className="icon-button" />
+                    <MenuOutlined className="icon-button" />
+                  </div>
+                ))}
+
+                <div className="table-details-row">
+                  <button
+                    className="action-button"
+                    onClick={() => onAddColumn(table.id)}
+                  >
+                    <PlusOutlined /> Add Index
+                  </button>
+                  <button className="action-button">
+                    <DeleteOutlined /> Trash
+                  </button>
+                </div>
               </div>
             )}
           </div>

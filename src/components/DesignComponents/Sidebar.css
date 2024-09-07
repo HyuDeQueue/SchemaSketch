@@ -86,6 +86,43 @@
   margin-right: 8px; /* Add space between input and icon */
 }
 
+.table-details-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.detail-label {
+  margin-right: 10px;
+}
+
+.detail-input {
+  margin-right: 10px;
+}
+
+.detail-select {
+  margin-right: 10px;
+}
+
+.table-details .icon-button {
+  margin-right: 10px;
+}
+
+.action-button {
+  background-color: #666;
+  border: none;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.action-button:hover {
+  background-color: #777;
+}
+
 .icon-button {
   cursor: pointer;
   font-size: 18px;
@@ -97,6 +134,7 @@
 }
 
 .table-details {
+  border-radius: 10px;
   padding: 10px;
   background-color: #444;
 }

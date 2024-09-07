@@ -3,7 +3,6 @@ import App from "../App";
 import LoginPage from "../pages/AuthenticationPages/LoginPage";
 import Dashboard from "../pages/UserPages/DesignListPage";
 import DesignPage from "../pages/UserPages/DesignPage";
-import Table from "../components/DesignComponents/Table";
 const RoutePath = () => {
   return (
     <BrowserRouter>
@@ -13,7 +12,6 @@ const RoutePath = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="designlist" element={<Dashboard />} />
           <Route path="designpage" element={<DesignPage />} />
-          <Route path="table" element={<Table />} />
         </Route>
       </Routes>
     </BrowserRouter>
