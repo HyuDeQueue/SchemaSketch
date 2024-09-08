@@ -13,7 +13,6 @@ const RoutePath = () => {
           <Route path="login" element={<LoginPage />} />
           <Route path="designlist" element={<Dashboard />} />
           <Route path="designpage" element={<DesignPage />} />
-          <Route path="table" element={<Table />} />
         </Route>
       </Routes>
     </BrowserRouter>
